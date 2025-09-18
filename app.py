@@ -492,6 +492,60 @@ scholarship_data = [
     }
 ]
 
+# Entrance Exam data
+exam_data = [
+    {
+        "exam_name": "Joint Entrance Examination (JEE) Main",
+        "description": "National level entrance exam for admission to NITs, IIITs, and other centrally funded technical institutions.",
+        "portal_url": "https://jeemain.nta.nic.in"
+    },
+    {
+        "exam_name": "Joint Entrance Examination (JEE) Advanced",
+        "description": "Entrance exam for admission to the Indian Institutes of Technology (IITs) for candidates who clear JEE Main.",
+        "portal_url": "https://jeeadv.ac.in"
+    },
+    {
+        "exam_name": "BITSAT (Birla Institute of Technology and Science Admission Test)",
+        "description": "Entrance test for admission to undergraduate engineering programs at BITS Pilani campuses.",
+        "portal_url": "https://bitsadmission.com"
+    },
+    {
+        "exam_name": "VITEEE (Vellore Institute of Technology Engineering Entrance Examination)",
+        "description": "Entrance exam conducted by VIT University for admissions to undergraduate engineering courses.",
+        "portal_url": "https://vit.ac.in"
+    },
+    {
+        "exam_name": "SRMJEEE (SRM Joint Engineering Entrance Examination)",
+        "description": "SRM University entrance exam for admission to undergraduate engineering programs.",
+        "portal_url": "https://www.srmist.edu.in"
+    },
+    {
+        "exam_name": "COMEDK UGET (Consortium of Medical, Engineering and Dental Colleges of Karnataka Undergraduate Entrance Test)",
+        "description": "State-level entrance test for admission to engineering, medical, and dental courses in Karnataka private colleges.",
+        "portal_url": "https://comedk.org"
+    },
+    {
+        "exam_name": "MHT CET (Maharashtra Health and Technical Common Entrance Test)",
+        "description": "State-level entrance exam for admission to engineering and pharmacy colleges in Maharashtra.",
+        "portal_url": "https://cetcell.mahacet.org"
+    },
+    {
+        "exam_name": "WBJEE (West Bengal Joint Entrance Examination)",
+        "description": "State-level entrance exam for engineering admissions in colleges of West Bengal.",
+        "portal_url": "https://wbjeeb.nic.in"
+    },
+    {
+        "exam_name": "TNEA (Tamil Nadu Engineering Admissions)",
+        "description": "Counseling and entrance process for admission to engineering courses in Tamil Nadu government and private colleges; based on 12th board marks.",
+        "portal_url": "https://www.tneaonline.in"
+    },
+    {
+        "exam_name": "KEAM (Kerala Engineering Architecture Medical)",
+        "description": "State-level entrance exam for engineering, architecture, and medical courses in Kerala.",
+        "portal_url": "https://cee.kerala.gov.in"
+    }
+]
+
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -661,6 +715,17 @@ def scholarships():
 @app.route('/scholarships-data')
 def get_scholarships():
     return jsonify(scholarship_data)
+
+# Application Portal page route
+@app.route('/application-portal')
+@login_required
+def application_portal():
+    return render_template('application_portal.html', exams=exam_data)
+
+# Route to serve exam data as JSON
+@app.route('/exams-data')
+def get_exams():
+    return jsonify(exam_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
