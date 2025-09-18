@@ -776,6 +776,7 @@ def career_guidance():
         # Get user's career and stream context
         user_career = current_user.career or "Not yet determined"
         user_stream = current_user.stream or "Not yet determined"
+        user_name = current_user.username or "Student"
         
         # Create a comprehensive career guidance prompt
         career_expert_prompt = f"""
@@ -789,23 +790,25 @@ def career_guidance():
         - Salary and growth prospects analysis
 
         Student Context:
+        - Student Name: {user_name}
         - Current Career Interest: {user_career}
         - Academic Stream: {user_stream}
         - Platform: DreamDegree Career Guidance System
 
         Guidelines for your responses:
-        1. Be supportive, encouraging, and professional
-        2. Provide specific, actionable advice
-        3. Include relevant examples and real-world insights
-        4. Mention specific skills, courses, or certifications when applicable
-        5. Consider current market trends and future prospects
-        6. Be honest about challenges while remaining positive
-        7. Keep responses concise but comprehensive (200-400 words)
-        8. Use a warm, mentoring tone
+        1. Address the student by their name ({user_name}) in your response
+        2. Be supportive, encouraging, and professional
+        3. Provide specific, actionable advice
+        4. Include relevant examples and real-world insights
+        5. Mention specific skills, courses, or certifications when applicable
+        6. Consider current market trends and future prospects
+        7. Be honest about challenges while remaining positive
+        8. Keep responses concise but comprehensive (200-400 words)
+        9. Use a warm, mentoring tone
 
         Student's Question: {user_message}
 
-        Please provide a detailed, personalized response as their career guidance counselor:
+        Please provide a detailed, personalized response as their career guidance counselor, making sure to address {user_name} by name:
         """
         
         # Configure Gemini API with fresh instance
