@@ -2,9 +2,15 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Change this in production
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'supersecretkey')
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dreamdegree.db'
@@ -12,6 +18,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
+# Note: Gemini API will be configured per request for better error handling
 
 # User model for database
 class User(UserMixin, db.Model):
@@ -180,7 +188,7 @@ college_data = [
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 # Broad questions to decide stream
 broad_questions = [
@@ -741,6 +749,106 @@ def application_portal():
 @app.route('/exams-data')
 def get_exams():
     return jsonify(exam_data)
+
+# Career Guidance Bot routes
+@app.route('/career-guidance-bot')
+@login_required
+def career_guidance_bot():
+    return render_template('career_guidance.html')
+
+@app.route('/career-guidance', methods=['POST'])
+@login_required
+def career_guidance():
+    try:
+        # Check if API key is configured
+        api_key = os.getenv('GEMINI_API_KEY')
+        if not api_key:
+            return jsonify({
+                'success': False, 
+                'error': 'API key not configured. Please contact administrator.'
+            })
+        
+        user_message = request.json.get('message', '')
+        
+        if not user_message:
+            return jsonify({'success': False, 'error': 'No message provided'})
+        
+        # Get user's career and stream context
+        user_career = current_user.career or "Not yet determined"
+        user_stream = current_user.stream or "Not yet determined"
+        
+        # Create a comprehensive career guidance prompt
+        career_expert_prompt = f"""
+        You are a highly experienced Career Guidance Counselor and Education Expert with over 20 years of experience helping students and professionals navigate their career paths. Your expertise includes:
+
+        - Career assessment and matching
+        - Educational pathway guidance
+        - Industry insights and job market trends
+        - Skills development recommendations
+        - Interview and resume guidance
+        - Salary and growth prospects analysis
+
+        Student Context:
+        - Current Career Interest: {user_career}
+        - Academic Stream: {user_stream}
+        - Platform: DreamDegree Career Guidance System
+
+        Guidelines for your responses:
+        1. Be supportive, encouraging, and professional
+        2. Provide specific, actionable advice
+        3. Include relevant examples and real-world insights
+        4. Mention specific skills, courses, or certifications when applicable
+        5. Consider current market trends and future prospects
+        6. Be honest about challenges while remaining positive
+        7. Keep responses concise but comprehensive (200-400 words)
+        8. Use a warm, mentoring tone
+
+        Student's Question: {user_message}
+
+        Please provide a detailed, personalized response as their career guidance counselor:
+        """
+        
+        # Configure Gemini API with fresh instance
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        # Generate response using Gemini
+        response = model.generate_content(career_expert_prompt)
+        
+        if response.text:
+            return jsonify({
+                'success': True, 
+                'response': response.text
+            })
+        else:
+            return jsonify({
+                'success': False, 
+                'error': 'Unable to generate response from AI service'
+            })
+            
+    except Exception as e:
+        print(f"Career guidance error: {str(e)}")
+        # Check for common API errors
+        if "API_KEY_INVALID" in str(e):
+            return jsonify({
+                'success': False, 
+                'error': 'Invalid API key. Please check your configuration.'
+            })
+        elif "QUOTA_EXCEEDED" in str(e):
+            return jsonify({
+                'success': False, 
+                'error': 'API quota exceeded. Please try again later.'
+            })
+        elif "PERMISSION_DENIED" in str(e):
+            return jsonify({
+                'success': False, 
+                'error': 'API access denied. Please check your API key permissions.'
+            })
+        else:
+            return jsonify({
+                'success': False, 
+                'error': f'Service temporarily unavailable. Error: {str(e)}'
+            })
 
 if __name__ == '__main__':
     # Create database tables
