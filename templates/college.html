@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colleges</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center p-8">
+    <div class="max-w-4xl w-full">
+        <h1 class="text-3xl font-bold mb-6 text-center">Top Engineering Colleges in India</h1>
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <input id="searchBar" type="text" placeholder="Search by college name..." class="flex-1 px-4 py-2 border rounded shadow-sm" />
+            <select id="locationFilter" class="px-4 py-2 border rounded shadow-sm">
+                <option value="">All Locations</option>
+            </select>
+            <select id="rankFilter" class="px-4 py-2 border rounded shadow-sm">
+                <option value="">All Rankings</option>
+                <option value="top10">Top 10</option>
+                <option value="top50">Top 50</option>
+                <option value="top100">Top 100</option>
+            </select>
+        </div>
+        <div id="collegeList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+    <script>
+        let colleges = [];
+        let filteredColleges = [];
+        const searchBar = document.getElementById('searchBar');
+        const locationFilter = document.getElementById('locationFilter');
+        const rankFilter = document.getElementById('rankFilter');
+        const collegeList = document.getElementById('collegeList');
+
+        // Fetch college data
+        fetch('/colleges')
+            .then(res => res.json())
+            .then(data => {
+                colleges = data;
+                populateLocationFilter();
+                filterAndRender();
+            });
+
+        function populateLocationFilter() {
+            const locations = Array.from(new Set(colleges.map(c => c.state)));
+            locations.sort();
+            locations.forEach(loc => {
+                const opt = document.createElement('option');
+                opt.value = loc;
+                opt.textContent = loc;
+                locationFilter.appendChild(opt);
+            });
+        }
+
+        function filterAndRender() {
+            const search = searchBar.value.toLowerCase();
+            const location = locationFilter.value;
+            const rank = rankFilter.value;
+            filteredColleges = colleges.filter(c => {
+                let match = true;
+                if (search && !c.name.toLowerCase().includes(search)) match = false;
+                if (location && c.state !== location) match = false;
+                if (rank === 'top10' && c.nirf_engineering_rank > 10) match = false;
+                if (rank === 'top50' && c.nirf_engineering_rank > 50) match = false;
+                if (rank === 'top100' && c.nirf_engineering_rank > 100) match = false;
+                return match;
+            });
+            renderColleges();
+        }
+
+        function renderColleges() {
+            collegeList.innerHTML = '';
+            if (filteredColleges.length === 0) {
+                collegeList.innerHTML = '<div class="col-span-2 text-center text-gray-500">No colleges found.</div>';
+                return;
+            }
+            filteredColleges.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow p-6 flex flex-col gap-2';
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-xl font-bold text-blue-700">${c.name}</h2>
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">NIRF Rank: ${c.nirf_engineering_rank}</span>
+                    </div>
+                    <div class="text-gray-600 text-sm">${c.city}, ${c.state} - ${c.pincode}</div>
+                    <div class="text-gray-700 text-sm"><b>Departments:</b> ${c.departments.join(', ')}</div>
+                `;
+                collegeList.appendChild(div);
+            });
+        }
+
+        searchBar.addEventListener('input', filterAndRender);
+        locationFilter.addEventListener('change', filterAndRender);
+        rankFilter.addEventListener('change', filterAndRender);
+    </script>
+</body>
+</html>

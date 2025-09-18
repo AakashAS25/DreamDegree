@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Career Guidance Prototype</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex flex-col items-center p-6 min-h-screen">
+
+<div id="quiz-container" class="bg-white p-8 rounded shadow-md max-w-xl w-full">
+    <h1 class="text-3xl font-bold mb-6 text-center">Career Guidance</h1>
+
+    <div id="question-box" class="mb-6"></div>
+
+    <button id="next-btn" class="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50" disabled>Next</button>
+</div>
+
+<script>
+let questions = [];
+let currentQuestionIndex = 0;
+let answers = [];
+let broadStream = null;
+let phase = "broad";
+
+const quizContainer = document.getElementById('quiz-container');
+const nextBtn = document.getElementById('next-btn');
+
+async function fetchQuestions(type, stream=null) {
+    let url = "";
+    if (type === "broad") {
+        url = "/questions/broad";
+    } else if (type === "detailed" && stream) {
+        url = `/questions/detailed/${stream}`;
+    }
+    const resp = await fetch(url);
+    questions = await resp.json();
+    currentQuestionIndex = 0;
+    answers = [];
+    // If detailed phase, re-bind nextBtn
+    if (type === "detailed") {
+        window.nextBtn = document.getElementById('next-btn');
+        if (nextBtn) {
+            nextBtn.disabled = true;
+            nextBtn.onclick = null;
+            nextBtn.addEventListener('click', () => {
+                const selected = document.querySelector('input[name="option"]:checked');
+                if (!selected) return;
+                answers.push(parseInt(selected.value));
+                currentQuestionIndex++;
+                showQuestion();
+            });
+        }
+    }
+    showQuestion();
+}
+
+function showQuestion() {
+    const container = document.getElementById('question-box');
+    if (!container) {
+        console.error('question-box element not found');
+        return;
+    }
+    container.innerHTML = '';
+    const q = questions[currentQuestionIndex];
+    if (!q) {
+        if (phase === "broad") {
+            submitBroadAnswers();
+        } else if (phase === "detailed") {
+            submitDetailedAnswers();
+        }
+        return;
+    }
+
+    const questionEl = document.createElement('p');
+    questionEl.className = "text-xl font-semibold mb-4";
+    questionEl.textContent = `Q${currentQuestionIndex + 1}: ${q.question}`;
+    container.appendChild(questionEl);
+
+    q.options.forEach((opt, idx) => {
+        const label = document.createElement('label');
+        label.className = "block mb-3 cursor-pointer hover:bg-gray-100 p-2 rounded";
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'option';
+        input.value = idx;
+        input.className = "mr-3";
+        input.addEventListener('change', () => {
+            nextBtn.disabled = false;
+            input.focus();
+        });
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(opt));
+        container.appendChild(label);
+    });
+
+    nextBtn.disabled = true;
+
+    // Add Enter key support for proceeding to next question
+    container.onkeydown = function(e) {
+        if ((e.key === 'Enter' || e.keyCode === 13) && !nextBtn.disabled) {
+            nextBtn.click();
+        }
+    };
+    // Focus the first radio for accessibility
+    const firstRadio = container.querySelector('input[type="radio"]');
+    if (firstRadio) firstRadio.focus();
+}
+
+async function submitBroadAnswers() {
+    const resp = await fetch('/submit_answers/broad', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(answers),
+    });
+    const data = await resp.json();
+    broadStream = data.stream;
+
+    // Hide the original next button and question-box to prevent errors
+    if (nextBtn) nextBtn.style.display = 'none';
+    const questionBox = document.getElementById('question-box');
+    if (questionBox) questionBox.style.display = 'none';
+
+    let message = "";
+    if (broadStream === "Science") {
+        message = "🌟 <b>Awesome! You are a science favor person!</b> Let's dive deeper to find your best career path.";
+    } else if (broadStream === "Arts") {
+        message = "🎨 <b>Wonderful! You have an arts inclination!</b> Let's explore your ideal career.";
+    } else if (broadStream === "Both") {
+        message = "✨ <b>Great! You appreciate both arts and science!</b> Let's find the perfect fit.";
+    } else {
+        message = "🧐 <b>No worries!</b> Let's explore some exciting career options!";
+    }
+
+    // Show message and Next button, but keep quizContainer structure for next questions
+    quizContainer.innerHTML = `
+      <div class="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white p-6 rounded-lg shadow-lg text-center text-xl font-semibold mb-4">
+        ${message}
+      </div>
+      <button id="manual-next" class="bg-blue-600 text-white px-5 py-2 rounded font-semibold shadow mt-6">Next</button>
+    `;
+
+    // On next, restore quiz UI and load detailed questions
+    document.getElementById('manual-next').onclick = () => {
+        phase = "detailed";
+        quizContainer.innerHTML = `
+          <h1 class="text-3xl font-bold mb-6 text-center">Career Guidance</h1>
+          <div id="question-box" class="mb-6"></div>
+          <button id="next-btn" class="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50" disabled>Next</button>
+        `;
+        // Re-bind nextBtn
+        window.nextBtn = document.getElementById('next-btn');
+        nextBtn.addEventListener('click', () => {
+            const selected = document.querySelector('input[name="option"]:checked');
+            if (!selected) return;
+            answers.push(parseInt(selected.value));
+            currentQuestionIndex++;
+            showQuestion();
+        });
+        fetchQuestions("detailed", broadStream === "Both" || broadStream === "Undecided" ? "Science" : broadStream);
+    };
+
+    // Also auto-move after 3 seconds
+    setTimeout(() => {
+        if (phase === "broad") { // Prevent duplicate if user clicks early
+            phase = "detailed";
+            quizContainer.innerHTML = `
+              <h1 class="text-3xl font-bold mb-6 text-center">Career Guidance</h1>
+              <div id="question-box" class="mb-6"></div>
+              <button id="next-btn" class="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50" disabled>Next</button>
+            `;
+            window.nextBtn = document.getElementById('next-btn');
+            nextBtn.addEventListener('click', () => {
+                const selected = document.querySelector('input[name="option"]:checked');
+                if (!selected) return;
+                answers.push(parseInt(selected.value));
+                currentQuestionIndex++;
+                showQuestion();
+            });
+            fetchQuestions("detailed", broadStream === "Both" || broadStream === "Undecided" ? "Science" : broadStream);
+        }
+    }, 3000);
+}
+
+
+async function submitDetailedAnswers() {
+    const resp = await fetch(`/submit_answers/detailed/${broadStream === "Both" || broadStream === "Undecided" ? "Science" : broadStream}`, {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(answers),
+    });
+    const data = await resp.json();
+
+    const careerName = data.career;
+    quizContainer.innerHTML = `
+    <div class="bg-yellow-400 text-gray-900 p-6 rounded-lg shadow-lg text-center text-2xl font-bold">
+        🎉 Hurray! You have chosen your career goal: <span class="underline">${careerName}</span> in the <span class="underline">${broadStream}</span> stream!
+    </div>
+    `;
+
+    setTimeout(() => {
+        sessionStorage.setItem('career', careerName);
+        sessionStorage.setItem('stream', broadStream);
+        window.location.href = '/dashboard';
+    }, 4000);
+}
+
+nextBtn.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (!selected) return;
+    answers.push(parseInt(selected.value));
+    currentQuestionIndex++;
+    showQuestion();
+});
+
+fetchQuestions("broad");
+</script>
+
+</body>
+</html>

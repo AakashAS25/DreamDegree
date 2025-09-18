@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ career }} Roadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow-md">
+    <h1 class="text-4xl font-bold mb-6 text-center">{{ career }} Learning Roadmap</h1>
+
+    {% if career == 'Engineering' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Learn Basics of Programming</h2>
+          <p>Start with Python, C, or Java and understand fundamentals.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Understand Data Structures & Algorithms</h2>
+          <p>Master arrays, linked lists, trees, searching and sorting.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Learn Core Engineering Subjects</h2>
+          <p>Study subjects like Electrical, Mechanical, Civil, or Computer Science.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Work on Projects & Internships</h2>
+          <p>Build real-world projects to apply your knowledge.</p>
+        </li>
+      </ul>
+    {% elif career == 'Medical' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Complete Pre-Medical Courses</h2>
+          <p>Biology, Chemistry, and Physics are essential.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Qualify Medical Entrance Exams</h2>
+          <p>Prepare for exams like NEET or MCAT.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Study MBBS or Equivalent Degree</h2>
+          <p>Learn clinical subjects and get practical exposure.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Specialize & Internship</h2>
+          <p>Choose specialty and work as intern/resident.</p>
+        </li>
+      </ul>
+    {% elif career == 'Research' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Get a strong foundation in Science subjects</h2>
+          <p>Physics, Chemistry, Mathematics, Biology as per interest.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Pursue a Bachelor's degree in science or technology</h2>
+          <p>Choose relevant subjects to develop research aptitude.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Enroll in Master's and PhD programs</h2>
+          <p>Focus on research work and publish papers.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Join research labs or institutions</h2>
+          <p>Gain experience and contribute to scientific advancements.</p>
+        </li>
+      </ul>
+    {% elif career == 'Environmental Science' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Study Environment-related subjects</h2>
+          <p>Biology, Geography, Earth science fundamentals.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Bachelor's or Master's in Environmental Science</h2>
+          <p>Specialize in ecosystem management, pollution control etc.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Gain experience through internships</h2>
+          <p>Work with NGOs, government, or private companies.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Career as environmental consultant or scientist</h2>
+          <p>Engage in protecting natural resources and policies.</p>
+        </li>
+      </ul>
+    {% elif career == 'Management Studies' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Learn Business Fundamentals</h2>
+          <p>Accounting, Economics, Marketing basics.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Bachelor's degree in Business or Commerce</h2>
+          <p>Develop management skills and business knowledge.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Internships and real-world projects</h2>
+          <p>Gain hands-on experience in business environments.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Advanced certifications (MBA etc.)</h2>
+          <p>Enhance career with specialized education and networking.</p>
+        </li>
+      </ul>
+    {% elif career == 'Law' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Study Political Science and Legal Basics</h2>
+          <p>Understand governance, constitution, and law fundamentals.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Bachelor of Law degree (LLB)</h2>
+          <p>Learn legal procedures, case law and advocacy.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Internships at courts or legal firms</h2>
+          <p>Gain practical exposure and networking opportunities.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Join bar council and start practice</h2>
+          <p>Build career through cases and reputation.</p>
+        </li>
+      </ul>
+    {% elif career == 'Media Studies' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Understand mass communication basics</h2>
+          <p>Learn about journalism, media theories, and ethics.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Bachelor's degree in Journalism or Mass Communication</h2>
+          <p>Develop skills in writing, reporting, and media production.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Internships and media projects</h2>
+          <p>Gain real-world experience in newsrooms or media houses.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Career as journalist, editor, or producer</h2>
+          <p>Build reputation and grow your audience.</p>
+        </li>
+      </ul>
+    {% elif career == 'Fine Arts' %}
+      <ul class="space-y-6">
+        <li>
+          <h2 class="text-xl font-semibold">Step 1: Learn drawing, painting, and design basics</h2>
+          <p>Explore various art forms and techniques.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 2: Formal education in Fine Arts</h2>
+          <p>Enroll in BFA or equivalent degree.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 3: Build portfolio and exhibit work</h2>
+          <p>Participate in exhibitions and art shows.</p>
+        </li>
+        <li>
+          <h2 class="text-xl font-semibold">Step 4: Career as professional artist or designer</h2>
+          <p>Work in creative industries or freelance.</p>
+        </li>
+      </ul>
+    {% else %}
+      <p>No roadmap available.</p>
+    {% endif %}
+
+    <a href="/" class="block mt-8 text-center text-blue-600 underline">Back to Home</a>
+  </div>
+</body>
+</html>
