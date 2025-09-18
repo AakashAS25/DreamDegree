@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarships - DreamDegree</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .scholarship-tile {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      transform: translateY(0);
+    }
+    
+    .scholarship-tile:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #f3f4f6;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #6b7280;
+      transition: all 0.2s ease;
+    }
+    
+    .close-btn:hover {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .tile-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .tile-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .tile-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .tile-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .tile-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .tile-gradient-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    .tile-gradient-7 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+    .tile-gradient-8 { background: linear-gradient(135deg, #ff8a80 0%, #ffb74d 100%); }
+    .tile-gradient-9 { background: linear-gradient(135deg, #81c784 0%, #aed581 100%); }
+    .tile-gradient-10 { background: linear-gradient(135deg, #9575cd 0%, #7986cb 100%); }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="gradient-bg text-white py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <h1 class="text-4xl font-bold text-center mb-4">Scholarship Opportunities</h1>
+      <p class="text-center text-lg opacity-90">Discover financial aid options to support your educational journey</p>
+      <div class="text-center mt-6">
+        <a href="/dashboard" class="inline-flex items-center bg-white text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scholarship Tiles -->
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for scholarship in scholarships %}
+      <div class="scholarship-tile tile-gradient-{{ loop.index }} text-white rounded-xl p-6 shadow-lg" 
+           onclick="openModal({{ loop.index0 }})">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-white bg-opacity-20 rounded-lg p-2">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+            </svg>
+          </div>
+          <div class="bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm font-medium">
+            Click to Learn More
+          </div>
+        </div>
+        <h3 class="text-xl font-bold mb-2 leading-tight">{{ scholarship.scholarship_name }}</h3>
+        <p class="text-sm opacity-90 mb-4 line-clamp-2">{{ scholarship.description[:80] }}...</p>
+        <div class="flex items-center text-sm opacity-80">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+          </svg>
+          Portal Available
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="scholarshipModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <div id="modalContent">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scholarships = {{ scholarships | tojson }};
+    
+    function openModal(index) {
+      const scholarship = scholarships[index];
+      const modal = document.getElementById('scholarshipModal');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalContent.innerHTML = `
+        <div class="mb-6">
+          <div class="flex items-center mb-4">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-3 mr-4">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-1">${scholarship.scholarship_name}</h2>
+              <div class="flex items-center text-green-600">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                Active Scholarship
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Description
+          </h3>
+          <p class="text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-lg">${scholarship.description}</p>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            Application Portal
+          </h3>
+          <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+            <a href="${scholarship.portal_link}" target="_blank" 
+               class="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+              Apply Now
+            </a>
+            <p class="text-sm text-gray-600 mt-2">Click to visit the official application portal</p>
+          </div>
+        </div>
+        
+        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-yellow-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <h4 class="font-semibold text-yellow-800">Important Note</h4>
+              <p class="text-sm text-yellow-700">Please verify eligibility criteria and application deadlines on the official portal before applying.</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      const modal = document.getElementById('scholarshipModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('scholarshipModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

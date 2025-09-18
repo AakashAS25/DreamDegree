@@ -5,168 +5,554 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ career }} Roadmap</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .todo-item {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 4px 0;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .todo-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+      transform: translateX(4px);
+    }
+    
+    .todo-checkbox {
+      margin-right: 8px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+    
+    .todo-item.completed {
+      opacity: 0.8;
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+    
+    .todo-item.completed span {
+      text-decoration: line-through !important;
+      opacity: 0.6 !important;
+      color: #9ca3af !important;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 min-h-screen p-6">
-  <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow-md">
-    <h1 class="text-4xl font-bold mb-6 text-center">{{ career }} Learning Roadmap</h1>
+  <div class="max-w-6xl mx-auto bg-white p-8 rounded shadow-md">
+    <h1 class="text-4xl font-bold mb-6 text-center">{{ career }} 4-Year Roadmap</h1>
+    <p class="text-center text-gray-600 mb-8">Daily action plan for your {{ career }} journey (15-day prototype)</p>
 
     {% if career == 'Engineering' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Learn Basics of Programming</h2>
-          <p>Start with Python, C, or Java and understand fundamentals.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Understand Data Structures & Algorithms</h2>
-          <p>Master arrays, linked lists, trees, searching and sorting.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Learn Core Engineering Subjects</h2>
-          <p>Study subjects like Electrical, Mechanical, Civil, or Computer Science.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Work on Projects & Internships</h2>
-          <p>Build real-world projects to apply your knowledge.</p>
-        </li>
-      </ul>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Day 1 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 1</h3>
+          <p class="text-sm text-gray-600 mb-2">Foundation Setup</p>
+          <ul class="text-sm space-y-1">
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Install Python/Java IDE</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Set up development environment</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Read "What is Programming?" article</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Join programming communities online</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Day 2 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 2</h3>
+          <p class="text-sm text-gray-600 mb-2">Programming Basics</p>
+          <ul class="text-sm space-y-1">
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Learn variables and data types</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Practice basic input/output</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Write "Hello World" program</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Complete 3 basic exercises</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 3</h3>
+          <p class="text-sm text-gray-600 mb-2">Control Structures</p>
+          <ul class="text-sm space-y-1">
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Learn if-else statements</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Practice conditional logic</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Build a simple calculator</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-blue-600 rounded" />
+              <span>Debug common errors</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 4</h3>
+          <p class="text-sm text-gray-600 mb-2">Loops & Iteration</p>
+          <ul class="text-sm space-y-1">
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-green-600 rounded" />
+              <span>Master for and while loops</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-green-600 rounded" />
+              <span>Practice nested loops</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-green-600 rounded" />
+              <span>Create multiplication table</span>
+            </li>
+            <li class="todo-item flex items-center" onclick="toggleTodo(this)">
+              <input type="checkbox" class="todo-checkbox mr-2 h-4 w-4 text-green-600 rounded" />
+              <span>Solve pattern problems</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 5</h3>
+          <p class="text-sm text-gray-600 mb-2">Functions & Methods</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn function definition</li>
+            <li>• Practice parameters & return values</li>
+            <li>• Build reusable code modules</li>
+            <li>• Create a mini project</li>
+          </ul>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 6</h3>
+          <p class="text-sm text-gray-600 mb-2">Data Structures - Arrays</p>
+          <ul class="text-sm space-y-1">
+            <li>• Understand array concepts</li>
+            <li>• Practice array operations</li>
+            <li>• Implement searching algorithms</li>
+            <li>• Solve array problems</li>
+          </ul>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+          <h3 class="font-bold text-lg text-yellow-700">Day 7</h3>
+          <p class="text-sm text-gray-600 mb-2">Weekly Review</p>
+          <ul class="text-sm space-y-1">
+            <li>• Review all concepts learned</li>
+            <li>• Complete practice test</li>
+            <li>• Build a small project</li>
+            <li>• Plan next week's learning</li>
+          </ul>
+        </div>
+
+        <!-- Day 8 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 8</h3>
+          <p class="text-sm text-gray-600 mb-2">Object-Oriented Programming</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn classes and objects</li>
+            <li>• Practice encapsulation</li>
+            <li>• Create your first class</li>
+            <li>• Understand inheritance basics</li>
+          </ul>
+        </div>
+
+        <!-- Day 9 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 9</h3>
+          <p class="text-sm text-gray-600 mb-2">Database Fundamentals</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn SQL basics</li>
+            <li>• Practice database queries</li>
+            <li>• Create simple database</li>
+            <li>• Connect code to database</li>
+          </ul>
+        </div>
+
+        <!-- Day 10 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 10</h3>
+          <p class="text-sm text-gray-600 mb-2">Web Development Intro</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn HTML/CSS basics</li>
+            <li>• Create your first webpage</li>
+            <li>• Add JavaScript interactions</li>
+            <li>• Build a portfolio page</li>
+          </ul>
+        </div>
+
+        <!-- Day 11 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 11</h3>
+          <p class="text-sm text-gray-600 mb-2">Project Planning</p>
+          <ul class="text-sm space-y-1">
+            <li>• Choose a project idea</li>
+            <li>• Create project requirements</li>
+            <li>• Design system architecture</li>
+            <li>• Set up version control (Git)</li>
+          </ul>
+        </div>
+
+        <!-- Day 12 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 12</h3>
+          <p class="text-sm text-gray-600 mb-2">Project Development</p>
+          <ul class="text-sm space-y-1">
+            <li>• Start coding your project</li>
+            <li>• Implement core features</li>
+            <li>• Test and debug code</li>
+            <li>• Document your progress</li>
+          </ul>
+        </div>
+
+        <!-- Day 13 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 13</h3>
+          <p class="text-sm text-gray-600 mb-2">Testing & Optimization</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn testing methodologies</li>
+            <li>• Write unit tests</li>
+            <li>• Optimize code performance</li>
+            <li>• Fix bugs and issues</li>
+          </ul>
+        </div>
+
+        <!-- Day 14 -->
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-indigo-700">Day 14</h3>
+          <p class="text-sm text-gray-600 mb-2">Career Preparation</p>
+          <ul class="text-sm space-y-1">
+            <li>• Update LinkedIn profile</li>
+            <li>• Create GitHub portfolio</li>
+            <li>• Research engineering colleges</li>
+            <li>• Network with professionals</li>
+          </ul>
+        </div>
+
+        <!-- Day 15 -->
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-indigo-700">Day 15</h3>
+          <p class="text-sm text-gray-600 mb-2">Milestone Review</p>
+          <ul class="text-sm space-y-1">
+            <li>• Complete project presentation</li>
+            <li>• Reflect on learning journey</li>
+            <li>• Plan next 15 days</li>
+            <li>• Celebrate achievements!</li>
+          </ul>
+        </div>
+      </div>
     {% elif career == 'Medical' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Complete Pre-Medical Courses</h2>
-          <p>Biology, Chemistry, and Physics are essential.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Qualify Medical Entrance Exams</h2>
-          <p>Prepare for exams like NEET or MCAT.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Study MBBS or Equivalent Degree</h2>
-          <p>Learn clinical subjects and get practical exposure.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Specialize & Internship</h2>
-          <p>Choose specialty and work as intern/resident.</p>
-        </li>
-      </ul>
-    {% elif career == 'Research' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Get a strong foundation in Science subjects</h2>
-          <p>Physics, Chemistry, Mathematics, Biology as per interest.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Pursue a Bachelor's degree in science or technology</h2>
-          <p>Choose relevant subjects to develop research aptitude.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Enroll in Master's and PhD programs</h2>
-          <p>Focus on research work and publish papers.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Join research labs or institutions</h2>
-          <p>Gain experience and contribute to scientific advancements.</p>
-        </li>
-      </ul>
-    {% elif career == 'Environmental Science' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Study Environment-related subjects</h2>
-          <p>Biology, Geography, Earth science fundamentals.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Bachelor's or Master's in Environmental Science</h2>
-          <p>Specialize in ecosystem management, pollution control etc.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Gain experience through internships</h2>
-          <p>Work with NGOs, government, or private companies.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Career as environmental consultant or scientist</h2>
-          <p>Engage in protecting natural resources and policies.</p>
-        </li>
-      </ul>
-    {% elif career == 'Management Studies' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Learn Business Fundamentals</h2>
-          <p>Accounting, Economics, Marketing basics.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Bachelor's degree in Business or Commerce</h2>
-          <p>Develop management skills and business knowledge.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Internships and real-world projects</h2>
-          <p>Gain hands-on experience in business environments.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Advanced certifications (MBA etc.)</h2>
-          <p>Enhance career with specialized education and networking.</p>
-        </li>
-      </ul>
-    {% elif career == 'Law' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Study Political Science and Legal Basics</h2>
-          <p>Understand governance, constitution, and law fundamentals.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Bachelor of Law degree (LLB)</h2>
-          <p>Learn legal procedures, case law and advocacy.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Internships at courts or legal firms</h2>
-          <p>Gain practical exposure and networking opportunities.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Join bar council and start practice</h2>
-          <p>Build career through cases and reputation.</p>
-        </li>
-      </ul>
-    {% elif career == 'Media Studies' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Understand mass communication basics</h2>
-          <p>Learn about journalism, media theories, and ethics.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Bachelor's degree in Journalism or Mass Communication</h2>
-          <p>Develop skills in writing, reporting, and media production.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Internships and media projects</h2>
-          <p>Gain real-world experience in newsrooms or media houses.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Career as journalist, editor, or producer</h2>
-          <p>Build reputation and grow your audience.</p>
-        </li>
-      </ul>
-    {% elif career == 'Fine Arts' %}
-      <ul class="space-y-6">
-        <li>
-          <h2 class="text-xl font-semibold">Step 1: Learn drawing, painting, and design basics</h2>
-          <p>Explore various art forms and techniques.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 2: Formal education in Fine Arts</h2>
-          <p>Enroll in BFA or equivalent degree.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 3: Build portfolio and exhibit work</h2>
-          <p>Participate in exhibitions and art shows.</p>
-        </li>
-        <li>
-          <h2 class="text-xl font-semibold">Step 4: Career as professional artist or designer</h2>
-          <p>Work in creative industries or freelance.</p>
-        </li>
-      </ul>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Day 1 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 1</h3>
+          <p class="text-sm text-gray-600 mb-2">Medical Foundation</p>
+          <ul class="text-sm space-y-1">
+            <li>• Read about human anatomy basics</li>
+            <li>• Study cell structure and function</li>
+            <li>• Learn medical terminology</li>
+            <li>• Join medical student communities</li>
+          </ul>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 2</h3>
+          <p class="text-sm text-gray-600 mb-2">Biology Fundamentals</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study organ systems overview</li>
+            <li>• Learn about DNA and genetics</li>
+            <li>• Practice biological diagrams</li>
+            <li>• Take notes on key concepts</li>
+          </ul>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-green-700">Day 3</h3>
+          <p class="text-sm text-gray-600 mb-2">Chemistry for Medicine</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study organic chemistry basics</li>
+            <li>• Learn chemical bonding</li>
+            <li>• Practice molecular structures</li>
+            <li>• Understand pH and solutions</li>
+          </ul>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 4</h3>
+          <p class="text-sm text-gray-600 mb-2">Physics in Medicine</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study biomechanics principles</li>
+            <li>• Learn about medical imaging</li>
+            <li>• Understand electricity in body</li>
+            <li>• Practice physics problems</li>
+          </ul>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 5</h3>
+          <p class="text-sm text-gray-600 mb-2">Cardiovascular System</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study heart anatomy</li>
+            <li>• Learn blood circulation</li>
+            <li>• Understand heart diseases</li>
+            <li>• Practice ECG reading basics</li>
+          </ul>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-blue-700">Day 6</h3>
+          <p class="text-sm text-gray-600 mb-2">Respiratory System</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study lung anatomy</li>
+            <li>• Learn breathing mechanics</li>
+            <li>• Understand respiratory diseases</li>
+            <li>• Practice spirometry basics</li>
+          </ul>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+          <h3 class="font-bold text-lg text-yellow-700">Day 7</h3>
+          <p class="text-sm text-gray-600 mb-2">Weekly Assessment</p>
+          <ul class="text-sm space-y-1">
+            <li>• Take practice NEET questions</li>
+            <li>• Review week's learning</li>
+            <li>• Identify weak areas</li>
+            <li>• Plan improvement strategy</li>
+          </ul>
+        </div>
+
+        <!-- Day 8 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 8</h3>
+          <p class="text-sm text-gray-600 mb-2">Nervous System</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study brain anatomy</li>
+            <li>• Learn neural pathways</li>
+            <li>• Understand reflexes</li>
+            <li>• Practice neurological tests</li>
+          </ul>
+        </div>
+
+        <!-- Day 9 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 9</h3>
+          <p class="text-sm text-gray-600 mb-2">Digestive System</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study GI tract anatomy</li>
+            <li>• Learn digestion process</li>
+            <li>• Understand metabolic pathways</li>
+            <li>• Practice dietary planning</li>
+          </ul>
+        </div>
+
+        <!-- Day 10 -->
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-purple-700">Day 10</h3>
+          <p class="text-sm text-gray-600 mb-2">Medical Ethics</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study Hippocratic Oath</li>
+            <li>• Learn patient confidentiality</li>
+            <li>• Understand informed consent</li>
+            <li>• Practice ethical dilemmas</li>
+          </ul>
+        </div>
+
+        <!-- Day 11 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 11</h3>
+          <p class="text-sm text-gray-600 mb-2">Clinical Skills</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn patient history taking</li>
+            <li>• Practice physical examination</li>
+            <li>• Understand vital signs</li>
+            <li>• Study medical instruments</li>
+          </ul>
+        </div>
+
+        <!-- Day 12 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 12</h3>
+          <p class="text-sm text-gray-600 mb-2">Pharmacology Basics</p>
+          <ul class="text-sm space-y-1">
+            <li>• Study drug classifications</li>
+            <li>• Learn dosage calculations</li>
+            <li>• Understand drug interactions</li>
+            <li>• Practice prescription reading</li>
+          </ul>
+        </div>
+
+        <!-- Day 13 -->
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-red-700">Day 13</h3>
+          <p class="text-sm text-gray-600 mb-2">Medical Research</p>
+          <ul class="text-sm space-y-1">
+            <li>• Learn research methodology</li>
+            <li>• Study clinical trials</li>
+            <li>• Understand evidence-based medicine</li>
+            <li>• Practice data analysis</li>
+          </ul>
+        </div>
+
+        <!-- Day 14 -->
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-indigo-700">Day 14</h3>
+          <p class="text-sm text-gray-600 mb-2">Medical Specialties</p>
+          <ul class="text-sm space-y-1">
+            <li>• Explore different specialties</li>
+            <li>• Shadow healthcare professionals</li>
+            <li>• Attend medical seminars</li>
+            <li>• Network with doctors</li>
+          </ul>
+        </div>
+
+        <!-- Day 15 -->
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-indigo-700">Day 15</h3>
+          <p class="text-sm text-gray-600 mb-2">Career Planning</p>
+          <ul class="text-sm space-y-1">
+            <li>• Prepare for entrance exams</li>
+            <li>• Research medical colleges</li>
+            <li>• Create study schedule</li>
+            <li>• Set long-term goals</li>
+          </ul>
+        </div>
+      </div>
     {% else %}
-      <p>No roadmap available.</p>
+      <div class="text-center text-gray-500">
+        <p>Detailed roadmap for {{ career }} is being developed.</p>
+        <p>Please check back soon for your personalized daily learning plan.</p>
+      </div>
     {% endif %}
 
-    <a href="/" class="block mt-8 text-center text-blue-600 underline">Back to Home</a>
+    <div class="mt-8 text-center">
+      <a href="/dashboard" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-4">Back to Dashboard</a>
+      <p class="text-gray-600 mt-4">This represents days 1-15 of your 4-year journey. Complete these tasks and advance to the next phase!</p>
+      <div class="mt-4 bg-blue-50 p-4 rounded-lg">
+        <p class="text-sm text-blue-700">✅ Click on any task to mark it as completed. Your progress will be saved locally!</p>
+      </div>
+    </div>
   </div>
+  
+  <script>
+    function toggleTodo(element) {
+      const checkbox = element.querySelector('input[type="checkbox"]');
+      const span = element.querySelector('span');
+      
+      // Toggle checkbox state
+      checkbox.checked = !checkbox.checked;
+      
+      if (checkbox.checked) {
+        element.classList.add('completed');
+        span.style.textDecoration = 'line-through';
+        span.style.opacity = '0.6';
+        span.style.color = '#9ca3af';
+      } else {
+        element.classList.remove('completed');
+        span.style.textDecoration = 'none';
+        span.style.opacity = '1';
+        span.style.color = '#374151';
+      }
+      
+      // Save progress to localStorage
+      saveProgress();
+    }
+    
+    // Also handle direct checkbox clicks
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkboxes = document.querySelectorAll('.todo-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function(e) {
+          e.stopPropagation();
+          const todoItem = this.closest('.todo-item');
+          const span = todoItem.querySelector('span');
+          
+          if (this.checked) {
+            todoItem.classList.add('completed');
+            span.style.textDecoration = 'line-through';
+            span.style.opacity = '0.6';
+            span.style.color = '#9ca3af';
+          } else {
+            todoItem.classList.remove('completed');
+            span.style.textDecoration = 'none';
+            span.style.opacity = '1';
+            span.style.color = '#374151';
+          }
+          
+          saveProgress();
+        });
+      });
+      
+      // Load saved progress
+      loadProgress();
+    });
+    
+    function saveProgress() {
+      const checkboxes = document.querySelectorAll('.todo-checkbox');
+      const progress = {};
+      checkboxes.forEach((checkbox, index) => {
+        progress[index] = checkbox.checked;
+      });
+      localStorage.setItem('roadmap_progress_{{ career }}', JSON.stringify(progress));
+    }
+    
+    function loadProgress() {
+      const saved = localStorage.getItem('roadmap_progress_{{ career }}');
+      if (saved) {
+        const progress = JSON.parse(saved);
+        const checkboxes = document.querySelectorAll('.todo-checkbox');
+        checkboxes.forEach((checkbox, index) => {
+          if (progress[index]) {
+            checkbox.checked = true;
+            const todoItem = checkbox.closest('.todo-item');
+            todoItem.classList.add('completed');
+            const span = todoItem.querySelector('span');
+            span.style.textDecoration = 'line-through';
+            span.style.opacity = '0.6';
+            span.style.color = '#9ca3af';
+          }
+        });
+      }
+    }
+  </script>
 </body>
 </html>

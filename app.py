@@ -438,6 +438,60 @@ arts_questions = [
     },
 ]
 
+# Scholarship data
+scholarship_data = [
+    {
+        "scholarship_name": "National Scholarship Portal (NSP)",
+        "description": "Platform for applying to multiple government scholarships including Pre/Post Matric and Top Class schemes.",
+        "portal_link": "http://scholarships.gov.in"
+    },
+    {
+        "scholarship_name": "Vidyadhan Tamil Nadu Plus 1 Scholarship 2025",
+        "description": "Scholarship for meritorious students from economically weaker sections in Tamil Nadu for Plus 1 and Plus 2 studies.",
+        "portal_link": "https://vidyadhan.org"
+    },
+    {
+        "scholarship_name": "Post Matric Scholarships, Karnataka (SSP) 2025",
+        "description": "Covers tuition, accommodation, and other education expenses for reserved category students in Karnataka.",
+        "portal_link": "http://scholarships.gov.in"
+    },
+    {
+        "scholarship_name": "NSP Central Sector Scheme for College and University Students 2025",
+        "description": "Supports meritorious students from economically weaker sections pursuing higher education across India.",
+        "portal_link": "http://scholarships.gov.in"
+    },
+    {
+        "scholarship_name": "ICCR Scholarships 2025-26",
+        "description": "Scholarships offered by Indian Council for Cultural Relations for foreign students and Indian students for higher education.",
+        "portal_link": "https://www.indiaingreece.gov.in/page/iccr-scholarships-2025-26/"
+    },
+    {
+        "scholarship_name": "Pradhan Mantri Uchchatar Shiksha Protsahan (PM-USP)",
+        "description": "Central Sector Scheme for financial assistance to college and university students in India.",
+        "portal_link": "https://www.myscheme.gov.in/schemes/csss-cus"
+    },
+    {
+        "scholarship_name": "SC/ST/OBC Scholarship Schemes 2025",
+        "description": "Financial aid schemes for SC, ST, and OBC students with coverage for tuition, books, hostel charges, and maintenance.",
+        "portal_link": "https://educationforallinindia.com/sc-st-obc-scholarship-schemes-2025-%E2%82%B960000-and-%E2%82%B948000-programs-explained/"
+    },
+    {
+        "scholarship_name": "Reliance Foundation Undergraduate Scholarships 2025-26",
+        "description": "Merit-cum-means scholarship offering up to ₹2 lakh to undergraduates with mentorship and alumni support.",
+        "portal_link": "https://www.scholarships.reliancefoundation.org/UG_Scholarship.aspx"
+    },
+    {
+        "scholarship_name": "Oasis Scholarship Portal (West Bengal)",
+        "description": "Online scholarship platform for SC, ST, and OBC students domiciled in West Bengal.",
+        "portal_link": "https://oasis.gov.in"
+    },
+    {
+        "scholarship_name": "Vidyasaarathi Scholarship Portal",
+        "description": "Leading independent scholarship platform in India offering a wide range of scholarships.",
+        "portal_link": "https://www.vidyasaarathi.co.in"
+    }
+]
+
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -596,6 +650,17 @@ def get_colleges():
 @login_required
 def college():
     return render_template('college.html')
+
+# Scholarship page route
+@app.route('/scholarships')
+@login_required
+def scholarships():
+    return render_template('scholarships.html', scholarships=scholarship_data)
+
+# Route to serve scholarship data as JSON
+@app.route('/scholarships-data')
+def get_scholarships():
+    return jsonify(scholarship_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
