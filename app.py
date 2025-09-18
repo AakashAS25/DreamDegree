@@ -1,17 +1,36 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for, session, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Change this in production
 
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dreamdegree.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize SQLAlchemy
+db = SQLAlchemy(app)
+
+# User model for database
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+    career = db.Column(db.String(100))
+    stream = db.Column(db.String(100))
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 # Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-# In-memory user store (replace with DB in production)
-users = {}
 
 # College data (static for now)
 college_data = [
@@ -159,22 +178,9 @@ college_data = [
   }
 ]
 
-class User(UserMixin):
-    def __init__(self, id, username, password_hash, stream=None, career=None):
-        self.id = id
-        self.username = username
-        self.password_hash = password_hash
-        self.stream = stream
-        self.career = career
-    def get_id(self):
-        return str(self.id)
-
 @login_manager.user_loader
 def load_user(user_id):
-    for user in users.values():
-        if user.get_id() == user_id:
-            return user
-    return None
+    return User.query.get(int(user_id))
 
 # Broad questions to decide stream
 broad_questions = [
@@ -552,11 +558,18 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in users:
+        
+        # Check if user already exists
+        if User.query.filter_by(username=username).first():
             flash('Username already exists!')
             return redirect(url_for('register'))
-        user = User(id=len(users)+1, username=username, password_hash=generate_password_hash(password))
-        users[username] = user
+        
+        # Create new user
+        user = User(username=username)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        
         flash('Registration successful! Please log in.')
         return redirect(url_for('login'))
     return render_template('register.html')
@@ -567,8 +580,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = users.get(username)
-        if user and check_password_hash(user.password_hash, password):
+        
+        # Find user in database
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
             login_user(user)
             flash('Logged in successfully!')
             # If user has not chosen stream/career, go to quiz
@@ -647,7 +662,7 @@ def submit_broad_answers():
     recommended_stream = max(stream_scores, key=stream_scores.get)
     # Save to user and session
     current_user.stream = recommended_stream
-    users[current_user.username].stream = recommended_stream
+    db.session.commit()
     session['stream'] = recommended_stream
     return jsonify({"stream": recommended_stream})
 
@@ -671,7 +686,7 @@ def submit_detailed_answers(stream):
     recommended_career = max(career_scores, key=career_scores.get)
     # Save to user and session
     current_user.career = recommended_career
-    users[current_user.username].career = recommended_career
+    db.session.commit()
     session['career'] = recommended_career
     return jsonify({"career": recommended_career})
 
@@ -728,4 +743,7 @@ def get_exams():
     return jsonify(exam_data)
 
 if __name__ == '__main__':
+    # Create database tables
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
