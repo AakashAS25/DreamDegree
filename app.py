@@ -21,6 +21,9 @@ db = SQLAlchemy(app)
 
 # Note: Gemini API will be configured per request for better error handling
 
+# Cache for last successful Gemini model to avoid re-listing every request
+LAST_WORKING_GEMINI_MODEL = None
+
 # User model for database
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -813,7 +816,79 @@ def career_guidance():
         
         # Configure Gemini API with fresh instance
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        global LAST_WORKING_GEMINI_MODEL
+        model = None
+        quota_exceeded = False
+        last_error = None
+
+        preferred_models = []
+        # If we already have a working model cached, try it first
+        if LAST_WORKING_GEMINI_MODEL:
+            preferred_models.append(LAST_WORKING_GEMINI_MODEL)
+        # Known lightweight / broadly accessible model we saw working
+        preferred_models.append('models/gemini-1.5-flash-8b')
+        # Add generic names as fallbacks (may or may not exist for account)
+        preferred_models.extend([
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-latest',
+            'gemini-pro',
+            'gemini-1.5-pro'
+        ])
+
+        tried = set()
+
+        def try_model(name):
+            nonlocal model, quota_exceeded, last_error
+            if name in tried:
+                return False
+            tried.add(name)
+            try:
+                candidate = genai.GenerativeModel(name)
+                test = candidate.generate_content("Hi")
+                if test and getattr(test, 'text', None):
+                    model = candidate
+                    print(f"[Gemini] Using model: {name}")
+                    return True
+            except Exception as ex:
+                err = str(ex)
+                last_error = err
+                print(f"[Gemini] Model {name} failed: {err}")
+                if '429' in err or 'quota' in err.lower():
+                    quota_exceeded = True
+            return False
+
+        # 1. Try preferred list
+        for mname in preferred_models:
+            if try_model(mname):
+                LAST_WORKING_GEMINI_MODEL = mname
+                break
+
+        # 2. If still none and no quota issue, attempt discovery once
+        if model is None and not quota_exceeded:
+            try:
+                print("[Gemini] Discovering available models...")
+                for m in genai.list_models():
+                    if 'generateContent' in getattr(m, 'supported_generation_methods', []):
+                        if try_model(m.name):
+                            LAST_WORKING_GEMINI_MODEL = m.name
+                            break
+            except Exception as disc_err:
+                print(f"[Gemini] Discovery failed: {disc_err}")
+                if not last_error:
+                    last_error = str(disc_err)
+
+        if quota_exceeded and model is None:
+            return jsonify({
+                'success': False,
+                'error': 'Daily usage limit reached for AI service. Please try again tomorrow or upgrade your plan.'
+            })
+
+        if model is None:
+            print(f"[Gemini] No working model. Last error: {last_error}")
+            fallback_response = f"""
+            Hi {user_name}! 👋\n\nI'm currently experiencing technical difficulties, but I'm here to help with your career guidance needs.\n\nBased on your interest in {user_career} and {user_stream} stream, here are some general recommendations:\n\n🎯 Career Development Tips:\n• Research industry trends and required skills\n• Build a strong portfolio showcasing your work\n• Network with professionals in your field\n• Consider internships and hands-on experience\n• Stay updated with latest technologies and methodologies\n\n📚 Educational Path:\n• Focus on core subjects related to your stream\n• Develop both technical and soft skills\n• Look into certifications relevant to your career\n• Join professional communities and forums\n\n🔍 Next Steps:\n• Explore college programs that align with your goals\n• Research scholarship opportunities\n• Connect with mentors in your field of interest\n\nPlease try again later for more personalized AI-powered guidance, or feel free to ask specific questions!"""
+            return jsonify({'success': True, 'response': fallback_response})
         
         # Generate response using Gemini
         response = model.generate_content(career_expert_prompt)
